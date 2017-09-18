@@ -4,30 +4,16 @@ $(function(){
 	var deck = [];
 	var discard = [];
 	playerHand = [];
-	comHand = [];
-	turn = 'player'
+	comHand = [];	
+	run();
+
+
+
 	
 
 
 
 
-	fillDeck(deck);
-
-	dealHands(deck, playerHand, comHand);
-	// addCardToHand('')
-	playerHand.push('Kickball');
-	comHand.push('Kickball');
-	addCardToHand('#playHand', playerHand)
-	addCardToHand('#comHand', comHand)
-	dispPlayHand("#playHand .card", playerHand);
-	dispPlayHand('#comHand .card', comHand);
-	addTo(deck, 1, "Kickball");
-	addTo(deck, 1, "Kickball");
-
-
-	addTo(deck, 1, "Imploding Puppy");
-
-	deckClick(turn);
 
 
 
@@ -41,11 +27,21 @@ $(function(){
 
 
 
-
-
-
-
-
+	function run() {
+		fillDeck(deck);
+		dealHands(deck, playerHand, comHand);
+		playerHand.push('Kickball');
+		comHand.push('Kickball');
+		addCardToHand('#playHand', playerHand)
+		addCardToHand('#comHand', comHand)
+		dispPlayHand("#playHand .card", playerHand);
+		dispPlayHand('#comHand .card', comHand);
+		addTo(deck, 1, "Kickball");
+		addTo(deck, 1, "Kickball");
+		addTo(deck, 1, "Imploding Puppy");
+		deckClick();
+		playCards();
+	}
 
 	function addTo(destination, index, value) {
 		var array = [];
@@ -80,7 +76,7 @@ $(function(){
 		});	
 	}
 	
-	function deckClick(turn){
+	function deckClick(){
 		$('#deck').click(function(argument) {
 				dealCard(playerHand, deck)
 				addCardToHand('#playHand', playerHand)
@@ -101,8 +97,7 @@ $(function(){
 				if(confirm("You have a Kickball do you want to use it?") === true){
 					$(".Imploding").remove();
 					playerHand.splice(playerHand.indexOf('Imploding Puppy'), 1);
-					$("#playHand .Kickball").eq(0).remove();
-					playerHand.splice(playerHand.indexOf('Kickball'), 1)
+					moveToDiscard($("#playHand .Kickball").eq(0), playerHand)
 					addTo(deck, 1, "Imploding Puppy");
 
 				}	
@@ -118,22 +113,28 @@ $(function(){
 			if (comHand.indexOf("Kickball") !== -1){
 					$(".Imploding").remove();
 					comHand.splice(comHand.indexOf('Imploding Puppy'),1);
-					$("#comHand .Kickball").eq(0).remove();
-					comHand.splice(comHand.indexOf('Kickball'), 1);
+					// .remove();
+					moveToDiscard($("#comHand .Kickball").eq(0), comHand)
 					addTo(deck, 1, "Imploding Puppy");
 			}else{
 			alert("Computer Loses");
 			}			
 		}
 	}	
-	
+	function playCards(){
+		$('#playHand .card').click(function () {
+			console.log(this)
+			moveToDiscard(this, playerHand)
+		})
+	}
 
 
 
 
 	function moveToDiscard(move, hand) {
-		$('discard').append(move)
-		$(move).remove()
-		if (hand.indexOf(move.html()) !== -1) {}
+		console.log(move);
+		$(move).remove();
+		hand.splice(hand.indexOf($(move).html()), 1);
+		$('#discard').append(move);
 	}
 });
