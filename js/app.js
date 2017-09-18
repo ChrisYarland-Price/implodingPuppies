@@ -12,13 +12,19 @@ $(function(){
 
 
 	fillDeck(deck);
+
 	dealHands(deck, playerHand, comHand);
+	// addCardToHand('')
+	playerHand.push('Kickball');
+	comHand.push('Kickball');
+	addCardToHand('#playHand', playerHand)
+	addCardToHand('#comHand', comHand)
 
 	dispPlayHand("#playHand .card", playerHand);
 	dispPlayHand('#comHand .card', comHand);
+	addTo(deck, 2, "Kickball");
 
 	addTo(deck, 1, "Imploding Puppy");
-	addTo(deck, 4, "Kickball");
 
 	deckClick(turn);
 
@@ -72,9 +78,7 @@ $(function(){
 			$(this).addClass(hand[index]).html(hand[index]);
 		});	
 	}
-	function moveToDiscard(argument) {
-		// body...
-	}
+	
 	function deckClick(turn){
 		$('#deck').click(function(argument) {
 			if (turn == 'player'){
@@ -90,5 +94,16 @@ $(function(){
 	}
 	function addCardToHand(dest, hand) {
 		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
+	}
+
+
+
+
+
+
+	function moveToDiscard(move, hand) {
+		$('discard').append(move)
+		$(move).remove()
+		if (hand.indexOf(move.html()) !== -1) {}
 	}
 });
