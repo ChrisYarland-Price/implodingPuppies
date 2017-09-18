@@ -11,15 +11,37 @@
 		<h1>Imploding Puppies</h1>
 		<p>This is an implementation of the game exploding kittens on a PC.</p>
 	</header>
-	<div id="Instructions"></div>
-
+	<div id="Instructions">
+		<h2>How to Play</h2>
+		<p>This game is really simple the players can draw and play cards until the imploding puppy card is drawn.</p>
+		<p>When the Imploding puppy card is drawn, one of two things happen: </p>
+		<ul>
+			<li>If the player has a kickball card they can kick the puppy back into the deck.</li>
+			<li>If not, then the puppy implodes and they die.</li>
+		</ul>
+		<button id="instructionHide">Click to Hide the instructions</button>
+	</div>
+		
 	<main id="gameboard">
-		<div id="comHand"></div>
+		<div id="comHand">
+			<div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div>
+		</div>
 		<div id="board">
 			<div id="deck"></div>
-			<div id="Discard"></div>
+			<div id="discard"></div>
 		</div>
-		<div id="playHand"></div>
+		<div id="playHand"><div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div>
+			<div class="card"></div></div>
+		<div id="gameCommand">
+			
+		</div>
 	</main>
 </body>
 </html>
