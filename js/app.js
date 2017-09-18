@@ -1,11 +1,10 @@
 $(function(){
 
 
-	var deck = [];
-	var discard = [];
-	playerHand = [];
-	comHand = [];	
+	
+	
 	run();
+
 
 
 
@@ -28,6 +27,10 @@ $(function(){
 
 
 	function run() {
+		var deck = [];
+		var discard = [];
+		var playerHand = [];
+		var comHand = [];
 		fillDeck(deck);
 		dealHands(deck, playerHand, comHand);
 		playerHand.push('Kickball');
@@ -39,8 +42,9 @@ $(function(){
 		addTo(deck, 1, "Kickball");
 		addTo(deck, 1, "Kickball");
 		addTo(deck, 1, "Imploding Puppy");
-		deckClick();
-		playCards();
+		deckClick(playerHand,comHand, deck);
+		playCards(playerHand);
+		quit = prompt("would you like to quit")
 	}
 
 	function addTo(destination, index, value) {
@@ -58,6 +62,7 @@ $(function(){
 	}
 	function dealCard(destination, origin) {		
 	var randomNumber = Math.floor(Math.random() * deck.length);
+	debugger;
 	var card = origin.splice(randomNumber, 1)[0];
 	addTo(destination, 1, card)
 
@@ -76,14 +81,14 @@ $(function(){
 		});	
 	}
 	
-	function deckClick(){
-		$('#deck').click(function(argument) {
+	function deckClick(playerHand,comHand, deck){
+		$('#deck').click(function() {
 				dealCard(playerHand, deck)
 				addCardToHand('#playHand', playerHand)
-				playerComp(playerHand[playerHand.length -1])
+				playerComp(playerHand[playerHand.length -1], playerHand, deck)
 				dealCard(comHand, deck)
 				addCardToHand('#comHand', comHand)
-				compComp(comHand[comHand.length -1])
+				compComp(comHand[comHand.length -1], comHand, deck)
 
 			
 		})
@@ -91,7 +96,7 @@ $(function(){
 	function addCardToHand(dest, hand) {
 		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 	}
-	function playerComp(draw){
+	function playerComp(draw, playerHand, deck){
 		if (draw === "Imploding Puppy") {
 			if (playerHand.indexOf("Kickball") !== -1){
 				if(confirm("You have a Kickball do you want to use it?") === true){
@@ -106,22 +111,21 @@ $(function(){
 			}
 		}
 	}
-	function compComp(draw) {
+	function compComp(draw, comHand, deck) {
 		if (draw === "Imploding Puppy") {
 			debugger;
 			console.log(comHand)
 			if (comHand.indexOf("Kickball") !== -1){
 					$(".Imploding").remove();
 					comHand.splice(comHand.indexOf('Imploding Puppy'),1);
-					// .remove();
 					moveToDiscard($("#comHand .Kickball").eq(0), comHand)
 					addTo(deck, 1, "Imploding Puppy");
 			}else{
-			alert("Computer Loses");
+			alert("You Win! ");
 			}			
 		}
 	}	
-	function playCards(){
+	function playCards(playerHand){
 		$('#playHand .card').click(function () {
 			console.log(this)
 			moveToDiscard(this, playerHand)
