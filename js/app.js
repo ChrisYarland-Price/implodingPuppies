@@ -5,22 +5,22 @@ $(function(){
 	var discard = [];
 	playerHand = [];
 	comHand = [];
+	turn = 'player'
 	
 
 
 
 
 	fillDeck(deck);
-		console.log(deck)
-	dealHands(deck, playerHand, comHand)
-		console.log(playerHand)
-		console.log(comHand)
-		console.log(deck)
+	dealHands(deck, playerHand, comHand);
 
 	dispPlayHand("#playHand .card", playerHand);
-	dispPlayHand('#comHand .card', comHand)
+	dispPlayHand('#comHand .card', comHand);
 
+	addTo(deck, 1, "Imploding Puppy");
+	addTo(deck, 4, "Kickball");
 
+	deckClick(turn);
 
 
 
@@ -74,5 +74,21 @@ $(function(){
 	}
 	function moveToDiscard(argument) {
 		// body...
+	}
+	function deckClick(turn){
+		$('#deck').click(function(argument) {
+			if (turn == 'player'){
+				dealCard(playerHand, deck)
+				addCardToHand('#playHand', playerHand)
+				turn = 'com'
+			}else{
+				dealCard(comHand, deck)
+				addCardToHand('#comHand', comHand)
+				turn = 'player'
+			}
+		})
+	}
+	function addCardToHand(dest, hand) {
+		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 	}
 });
