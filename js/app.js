@@ -1,16 +1,7 @@
 $(function(){
-		pwins = 0;
-		cwins = 0;
-		var deck = [];
-		// var discard = [];
-		var playerHand = [];
-		var comHand = [];
 
-	
-	
-		run(deck, discard, playerHand, comHand);
-		deckClick(playerHand,comHand, deck);
-		playCards(playerHand);
+
+	scoreboard();
 
 
 
@@ -32,7 +23,7 @@ $(function(){
 
 
 
-	function run(deck, discard, playerHand, comHand) {
+	function gamePrep(deck, playerHand, comHand) {
 		var discard = [];
 		fillDeck(deck);
 		dealHands(deck, playerHand, comHand);
@@ -54,15 +45,15 @@ $(function(){
 		}
 	}	
 	function fillDeck(deck) {
-		debugger
 		addTo(deck, 5, '1');
 		addTo(deck, 5, '2');
 		addTo(deck, 5, '3');
 		addTo(deck, 5, '4');
 		addTo(deck, 5, '5');
 	}
-	function dealCard(destination, origin) {		
-		var randomNumber = Math.floor(Math.random() * deck.length);
+	function dealCard(destination, origin) {
+		debugger	
+		var randomNumber = Math.floor(Math.random() * origin.length);
 		var card = origin.splice(randomNumber, 1)[0];
 		addTo(destination, 1, card)
 
@@ -85,61 +76,76 @@ $(function(){
 	}
 	
 	function deckClick(playerHand,comHand, deck){
+		var pwins = 0;
+		var cwins = 0;
+		var oldp = pwins;
+		var oldc = cwins;
+		setInterval(function(){
+			$('#pscore').html(pwins);
+			$('#cscore').html(cwins)
+		}, 100);
 		$('#deck').click(function() {
-				dealCard(playerHand, deck)
-				addCardToHand('#playHand', playerHand)
-				playerComp(playerHand[playerHand.length -1], playerHand, deck)
-				dealCard(comHand, deck)
-				addCardToHand('#comHand', comHand)
-				compComp(comHand[comHand.length -1], comHand, deck)
+			pwins = dealer(playerHand, deck, pwins, '#playHand', '#playHand .Kickball', comHand)
+			cwins = dealer(comHand, deck, cwins, '#comHand', '#comHand .Kickball', playerHand)
+			if (pwins !== oldp || cwins !== oldc) {
+				oldc = cwins;
+				oldp = pwins;
+				restart(deck, playerHand, comHand);
+			}
+		});
 
-			
-		})
 	}
+	function dealer(hand, deck, win, disphand, place, other) {
+		dealCard(hand, deck);
+		addCardToHand(disphand, hand);
+		win = playerComp(hand[hand.length - 1], hand, deck, win, place, other);
+
+		return win;
+		}
 	function addCardToHand(dest, hand) {
 		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 	}
-	function playerComp(draw, playerHand, deck){
+	function playerComp(draw, hand, deck, wins, place, other){
 		if (draw === "Imploding Puppy") {
-			if (playerHand.indexOf("Kickball") !== -1 && confirm("You have a Kickball do you want to use it?") === true){
+			if ( place === '#playHand .Kickball' && hand.indexOf("Kickball") !== -1 && confirm("You have a Kickball do you want to use it?") === true) {
+						$(".Imploding").remove();
+						hand.splice(hand.indexOf('Imploding Puppy'), 1);
+						moveToDiscard($(place).eq(0), hand)
+						addTo(deck, 1, "Imploding Puppy");	
+						return wins;
+			}else if (place === '#comHand .Kickball' && hand.indexOf("Kickball") !== -1){
 					$(".Imploding").remove();
-					playerHand.splice(playerHand.indexOf('Imploding Puppy'), 1);
-					moveToDiscard($("#playHand .Kickball").eq(0), playerHand)
-					addTo(deck, 1, "Imploding Puppy");	
+						hand.splice(hand.indexOf('Imploding Puppy'), 1);
+						moveToDiscard($(place).eq(0), hand)
+						addTo(deck, 1, "Imploding Puppy");	
+						return wins;
 			}else{
-				alert("Player Loses");
-				cwins++;
-				restart();
-			}
-		}
-	}
-	function compComp(draw, comHand, deck) {
-		if (draw === "Imploding Puppy") {
-			if (comHand.indexOf("Kickball") !== -1){
-					$(".Imploding").remove();
-					comHand.splice(comHand.indexOf('Imploding Puppy'),1);
-					moveToDiscard($("#comHand .Kickball").eq(0), comHand)
-					addTo(deck, 1, "Imploding Puppy");
-			}else{
-			alert("You Win! ");
-			pwins++;
-			restart();
+				alert("End of Game");
+				if (place === "#comHand .Kickball") {
+					alert("Computer Wins")
+				}else {
+					alert("Player Wins")
+				}
+				return wins = wins + 1;
 			}			
+		}else{
+			return wins;
 		}
+			
 	}	
 	function playCards(playerHand){
 		$('#playHand .card').click(function () {
-			console.log(this)
 			moveToDiscard(this, playerHand)
 		})
 	}
-	function restart(){
+	function restart(deck, playerHand, comHand){
 		if (confirm("would you like to replay") === true){
+			debugger;
 			$('.card').remove();
 			deck.splice(0);
 			playerHand.splice(0);
 			comHand.splice(0);
-			run(deck, discard, playerHand, comHand);
+			gamePrep(deck, playerHand, comHand);
 		}else{
 			alert("You have quit the game")
 		}
@@ -148,10 +154,19 @@ $(function(){
 
 
 	function moveToDiscard(move, hand) {
-		console.log(move);
-		console.log(hand)
 		$(move).remove();
 		hand.splice(hand.indexOf($(move).html()), 1);
 		$('#discard').append(move);
 	}
+	function scoreboard() {
+		var deck = [];
+		var playerHand = [];
+		var comHand = [];
+		deckClick(playerHand,comHand, deck);
+		playCards(playerHand);
+		gamePrep(deck, playerHand, comHand);
+
+
+	}
+
 });
