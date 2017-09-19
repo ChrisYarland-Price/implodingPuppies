@@ -1,36 +1,39 @@
 $(function(){
-
-
-	
-	
-	run();
-
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	function run() {
+		pwins = 0;
+		cwins = 0;
 		var deck = [];
-		var discard = [];
+		// var discard = [];
 		var playerHand = [];
 		var comHand = [];
+
+	
+	
+		run(deck, discard, playerHand, comHand);
+		deckClick(playerHand,comHand, deck);
+		playCards(playerHand);
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function run(deck, discard, playerHand, comHand) {
+		var discard = [];
 		fillDeck(deck);
 		dealHands(deck, playerHand, comHand);
 		playerHand.push('Kickball');
@@ -42,9 +45,6 @@ $(function(){
 		addTo(deck, 1, "Kickball");
 		addTo(deck, 1, "Kickball");
 		addTo(deck, 1, "Imploding Puppy");
-		deckClick(playerHand,comHand, deck);
-		playCards(playerHand);
-		quit = prompt("would you like to quit")
 	}
 
 	function addTo(destination, index, value) {
@@ -54,24 +54,27 @@ $(function(){
 		}
 	}	
 	function fillDeck(deck) {
-	addTo(deck, 5, '1');
-	addTo(deck, 5, '2');
-	addTo(deck, 5, '3');
-	addTo(deck, 5, '4');
-	addTo(deck, 5, '5');
+		debugger
+		addTo(deck, 5, '1');
+		addTo(deck, 5, '2');
+		addTo(deck, 5, '3');
+		addTo(deck, 5, '4');
+		addTo(deck, 5, '5');
 	}
 	function dealCard(destination, origin) {		
-	var randomNumber = Math.floor(Math.random() * deck.length);
-	debugger;
-	var card = origin.splice(randomNumber, 1)[0];
-	addTo(destination, 1, card)
+		var randomNumber = Math.floor(Math.random() * deck.length);
+		var card = origin.splice(randomNumber, 1)[0];
+		addTo(destination, 1, card)
 
-	return card;
+		return card;
 	}
 	function dealHands(deck, playerHand, comHand){
 		for (var i = 0; i < 5; i++) {
+			addCardToHand('#playHand', playerHand)
+			addCardToHand('#comHand', comHand)
 			dealCard(playerHand, deck);
 			dealCard(comHand, deck);
+			
 		}
 	}
 	function dispPlayHand(dest, hand){
@@ -98,23 +101,20 @@ $(function(){
 	}
 	function playerComp(draw, playerHand, deck){
 		if (draw === "Imploding Puppy") {
-			if (playerHand.indexOf("Kickball") !== -1){
-				if(confirm("You have a Kickball do you want to use it?") === true){
+			if (playerHand.indexOf("Kickball") !== -1 && confirm("You have a Kickball do you want to use it?") === true){
 					$(".Imploding").remove();
 					playerHand.splice(playerHand.indexOf('Imploding Puppy'), 1);
 					moveToDiscard($("#playHand .Kickball").eq(0), playerHand)
-					addTo(deck, 1, "Imploding Puppy");
-
-				}	
+					addTo(deck, 1, "Imploding Puppy");	
 			}else{
 				alert("Player Loses");
+				cwins++;
+				restart();
 			}
 		}
 	}
 	function compComp(draw, comHand, deck) {
 		if (draw === "Imploding Puppy") {
-			debugger;
-			console.log(comHand)
 			if (comHand.indexOf("Kickball") !== -1){
 					$(".Imploding").remove();
 					comHand.splice(comHand.indexOf('Imploding Puppy'),1);
@@ -122,6 +122,8 @@ $(function(){
 					addTo(deck, 1, "Imploding Puppy");
 			}else{
 			alert("You Win! ");
+			pwins++;
+			restart();
 			}			
 		}
 	}	
@@ -131,12 +133,23 @@ $(function(){
 			moveToDiscard(this, playerHand)
 		})
 	}
-
+	function restart(){
+		if (confirm("would you like to replay") === true){
+			$('.card').remove();
+			deck.splice(0);
+			playerHand.splice(0);
+			comHand.splice(0);
+			run(deck, discard, playerHand, comHand);
+		}else{
+			alert("You have quit the game")
+		}
+	}
 
 
 
 	function moveToDiscard(move, hand) {
 		console.log(move);
+		console.log(hand)
 		$(move).remove();
 		hand.splice(hand.indexOf($(move).html()), 1);
 		$('#discard').append(move);
