@@ -93,11 +93,7 @@ body{
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }
-.Imploding {
-	background-image: url("../assets/giphy.gif");
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-}
+
 .Kickball {
 	background-image: url("../assets/Kickball.png");
 	background-size: 100% 100%;
@@ -108,6 +104,11 @@ body{
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	font-size: 0;	
+}
+.Imploding {
+	background-image: url("../assets/giphy.gif");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
 }
 #messages{
 	position: absolute;

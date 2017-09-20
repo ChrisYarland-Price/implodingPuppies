@@ -84,13 +84,15 @@ $(function(){
 		$('#deck').click(function() {
 			debugger;
 			cwins = dealer(playerHand, deck, cwins, '#playHand', '#playHand .Kickball', comHand)
-			pwins = dealer(comHand, deck, pwins, '#comHand', '#comHand .Kickball', playerHand)
-			playCards(playerHand);
-			if (pwins !== oldp || cwins !== oldc) {
-				oldc = cwins;
-				oldp = pwins;
-				restart(deck, playerHand, comHand);
-			}
+			setTimeout(function() {
+				pwins = dealer(comHand, deck, pwins, '#comHand', '#comHand .Kickball', playerHand)
+				playCards(playerHand)
+				if (pwins !== oldp || cwins !== oldc) {
+					oldc = cwins;
+					oldp = pwins;
+					restart(deck, playerHand, comHand);
+				}
+			}, 400);
 		});
 
 	}
@@ -100,26 +102,28 @@ $(function(){
 		win = playerComp(hand[hand.length - 1], hand, deck, win, place, other);
 
 		return win;
-		}
+	}
 	function addCardToHand(dest, hand) {
 		$(dest).delay(10000).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 	}
 	function playerComp(draw, hand, deck, wins, place, other){
 		var win = wins; 
 		if (draw === "Imploding Puppy") {
+
 			debugger;
 			if ( place === '#playHand .Kickball' && hand.indexOf("Kickball") !== -1 && confirm("You have a Kickball do you want to use it?") === true) {
-						$(".Imploding").delay(1000).remove();
-						hand.splice(hand.indexOf('Imploding Puppy'), 1);
-						moveToDiscard($(place).eq(0), hand)
-						addTo(deck, 1, "Imploding Puppy");	
-						return win;
+				setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
+				hand.splice(hand.indexOf('Imploding Puppy'), 1);
+				moveToDiscard($(place).eq(0), hand)
+				addTo(deck, 1, "Imploding Puppy");	
+				return win;
 			}else if (place === '#comHand .Kickball' && hand.indexOf("Kickball") !== -1){
-					$(".Imploding").remove();
-						hand.splice(hand.indexOf('Imploding Puppy'), 1);
-						moveToDiscard($(place).eq(0), hand)
-						addTo(deck, 1, "Imploding Puppy");	
-						return win;
+				setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
+				hand.splice(hand.indexOf('Imploding Puppy'), 1);
+				moveToDiscard($(place).eq(0), hand)
+				addTo(deck, 1, "Imploding Puppy");
+				message('The Computer Used a Kickball')	
+				return win;
 			}else{
 				if (place === "#comHand .Kickball") {
 					message("Player Wins")
@@ -153,9 +157,17 @@ $(function(){
 		}
 	}
 	function moveToDiscard(move, hand) {
-		$(move).remove().delay(1000);
+		setTimeout(function(){
+			$(move).slideUp("slow", function() {
+				$(move).delay(500).remove()
+			})
+			setTimeout(function(){
+				$('#discard').append(move)
+				$(move).delay(500).slideDown("slow");
+			},1000);
+		},1000);
 		hand.splice(hand.indexOf($(move).html()), 1);
-		$('#discard').append(move).delay(1000);
+		debugger
 	}
 	function scoreboard() {
 		var deck = [];
