@@ -15,7 +15,11 @@
 			<li>If the player has a kickball card they can kick the puppy back into the deck.</li>
 			<li>If not, then the puppy implodes and they die.</li>
 		</ul>
+		<button id="hideInstructions">Click Here to hide the instructions</button>
 	
+		
+	</div>
+	<div id = "sidebar">
 		<h3>Scoreboard</h3>
 		<div id="score">
 			<table>
@@ -33,6 +37,8 @@
 				</tr>
 			</table>
 		</div>
+		<div id="messages"></div>
+
 	</div>
 	<header>
 		<h1>Imploding Puppies</h1>
@@ -40,20 +46,15 @@
 	</header>
 	
 	<main id="gameboard">
-		<table>
-			<tr>
-				<th>Computers Hand</th>
-				<th> Players Hand</th>
-			</tr>
-
-		</table>
-		<div id="comHand"></div>
-		<div id="playHand"></div>
+		<div id="comHand"><h3>Computers Hand</h3></div>
+		<div id="playHand"><h3>Players Hand</h3></div>
 	</main>
 	<div id="gameCommand">
-		<div id="discard"><h2>Discard</h2></div>
-		<div id="deck"><h2>Deck</h2></div>
+		<h2>Discard</h2>
+		<div id="discard"></div>
+		<h2>Deck</h2>
+		<div id="deck"></div>
 	</div>
-	<div id="messages"></div>
+	
 </body>
 </html>

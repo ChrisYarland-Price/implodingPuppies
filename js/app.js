@@ -23,7 +23,11 @@ $(function(){
 
 	function gamePrep(deck, playerHand, comHand) {
 		var discard = [];
-		fillDeck(deck);
+		var cards = ['1','2','3','4','5']
+		for (var i = 0; i < cards.length; i++) {
+			addTo(deck, 5, cards[i]);
+		}
+		console.log(deck)
 		dealHands(deck, playerHand, comHand);
 		playerHand.push('Kickball');
 		comHand.push('Kickball');
@@ -31,8 +35,8 @@ $(function(){
 		addCardToHand('#comHand', comHand)
 		dispPlayHand("#playHand .card", playerHand);
 		dispPlayHand('#comHand .card', comHand);
-		addTo(deck, 1, "Kickball");
-		addTo(deck, 1, "Kickball");
+		addTo(deck, 2, "Kickball");
+		addTo(deck, 2, "Skip");
 		addTo(deck, 1, "Imploding Puppy");
 	}
 
@@ -42,13 +46,6 @@ $(function(){
 			destination.push(value);
 		}
 	}	
-	function fillDeck(deck) {
-		addTo(deck, 5, '1');
-		addTo(deck, 5, '2');
-		addTo(deck, 5, '3');
-		addTo(deck, 5, '4');
-		addTo(deck, 5, '5');
-	}
 	function dealCard(destination, origin) {
 		var randomNumber = Math.floor(Math.random() * origin.length);
 		var card = origin.splice(randomNumber, 1)[0];
@@ -71,30 +68,47 @@ $(function(){
 			$(this).addClass(hand[index]).html(hand[index]);
 		});	
 	}
-	
+	function interval(div, score) {
+		setInterval(function(){
+			$(div).html(score);
+			// $('#cscore').html(cwins)
+		}, 100);
+	}
 	function deckClick(playerHand,comHand, deck){
 		var pwins = 0;
 		var cwins = 0;
+		var score =[pwins, cwins];
 		var oldp = pwins;
 		var oldc = cwins;
+		playCards(comHand, deck, score[0], cwins, playerHand, score);
+		// interval('#cscore', score[1])
 		setInterval(function(){
-			$('#pscore').html(pwins);
-			$('#cscore').html(cwins)
+			$('#pscore').html(score[0]);
+			$('#cscore').html(score[1])
 		}, 100);
 		$('#deck').click(function() {
-			debugger;
-			cwins = dealer(playerHand, deck, cwins, '#playHand', '#playHand .Kickball', comHand)
-			setTimeout(function() {
-				pwins = dealer(comHand, deck, pwins, '#comHand', '#comHand .Kickball', playerHand)
-				playCards(playerHand)
-				if (pwins !== oldp || cwins !== oldc) {
-					oldc = cwins;
-					oldp = pwins;
-					restart(deck, playerHand, comHand);
-				}
-			}, 400);
+			cwins = dealer(playerHand, deck, score[1], '#playHand', '#playHand .Kickball', comHand)
+			debugger
+			score = comdeal(comHand, deck, score[0], cwins, playerHand, score);
+
+			playCards(comHand, deck, score[0], cwins, playerHand, score);
+
 		});
 
+	}
+	function comdeal(comHand, deck, playwins, cwins, playerHand, score) {
+		// interval('#pscore', score[0])
+		debugger
+		setTimeout(function() {
+			playwins = dealer(comHand, deck, playwins, '#comHand', '#comHand .Kickball', playerHand)
+			if (playwins !== score[0] || cwins !== score[1]) {
+				debugger
+				score[0] = playwins;
+				score[1] = cwins;
+				restart(deck, playerHand, comHand);
+			}
+		}, 400);	
+		return score;
 	}
 	function dealer(hand, deck, win, disphand, place, other) {
 		dealCard(hand, deck);
@@ -110,19 +124,12 @@ $(function(){
 		var win = wins; 
 		if (draw === "Imploding Puppy") {
 
-			debugger;
 			if ( place === '#playHand .Kickball' && hand.indexOf("Kickball") !== -1 && confirm("You have a Kickball do you want to use it?") === true) {
-				setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
-				hand.splice(hand.indexOf('Imploding Puppy'), 1);
-				moveToDiscard($(place).eq(0), hand)
-				addTo(deck, 1, "Imploding Puppy");	
+				kickball(hand,deck,place);	
 				return win;
 			}else if (place === '#comHand .Kickball' && hand.indexOf("Kickball") !== -1){
-				setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
-				hand.splice(hand.indexOf('Imploding Puppy'), 1);
-				moveToDiscard($(place).eq(0), hand)
-				addTo(deck, 1, "Imploding Puppy");
-				message('The Computer Used a Kickball')	
+				kickball(hand, deck, place);
+				
 				return win;
 			}else{
 				if (place === "#comHand .Kickball") {
@@ -137,15 +144,25 @@ $(function(){
 		}
 			
 	}	
-	function playCards(playerHand){
+	function kickball(hand, deck, place){
+		setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
+		hand.splice(hand.indexOf('Imploding Puppy'), 1);
+		moveToDiscard($(place).eq(0), hand)
+		addTo(deck, 1, "Imploding Puppy");
+		if (place === '#comHand .Kickball') {
+			message('The Computer Used a Kickball')	
+		}
+	}
+	function playCards(comHand, deck, pwins, cwins, playerHand, score){
 		$('#playHand .card').click(function () {
-			moveToDiscard(this, playerHand)
+			moveToDiscard(this, playerHand);
+			if ($(this).html() === "Skip") {
+				comdeal(comHand, deck, score[0], cwins, playerHand, score)
+			}
 		})
 	}
 	function restart(deck, playerHand, comHand){
-		debugger;
 		if (confirm("would you like to replay") === true){
-			debugger;
 			$('.card').remove();
 			deck.splice(0);
 			playerHand.splice(0);
@@ -164,23 +181,26 @@ $(function(){
 			setTimeout(function(){
 				$('#discard').append(move)
 				$(move).delay(500).slideDown("slow");
-			},1000);
-		},1000);
+			},700);
+		},100);
 		hand.splice(hand.indexOf($(move).html()), 1);
-		debugger
 	}
 	function scoreboard() {
 		var deck = [];
 		var playerHand = [];
 		var comHand = [];
-		deckClick(playerHand,comHand, deck);
+		hideInstruct();
 		gamePrep(deck, playerHand, comHand);
-		playCards(playerHand);
+		deckClick(playerHand,comHand, deck);
 	}
 	function message(content){
 
-		$('#messages').fadeIn(200).html(content).delay(800).fadeOut(200);
+		$('#messages').html(content);
 
 	}
-
+	function hideInstruct() {
+		$('#hideInstructions').click(function() {
+			$('#Instructions').hide();
+		});
+	}
 });
