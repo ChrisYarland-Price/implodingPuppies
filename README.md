@@ -92,15 +92,15 @@ From this point on the gameplay was implemented, at the end of the players turn 
 			turn = 'player'
 		}
 	})
-}```
+} ```
 
 This checked to see whose turn it was and then distributed a card to that player using the functions demonstrated above.
 
-```
+``` 
 function addCardToHand(dest, hand) {
 		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 	}
-```
+ ```
 addCardToHand was a simple creation function that created a new card onscreen using the values it is given.
 ---
 
