@@ -80,8 +80,7 @@ This was the base of the game from hereon, the talk shall mostly be on the imple
 ### Creation of the Gameplay
 From this point on the gameplay was implemented, at the end of the players turn they have to draw a card so the following code was created so that when they clicked on the deck there would be a process that took place. 
 
-```
-function deckClick(turn){
+``` function deckClick(turn){
 	$('#deck').click(function(argument) {
 		if (turn == 'player'){
 			dealCard(playerHand, deck)
@@ -93,8 +92,7 @@ function deckClick(turn){
 			turn = 'player'
 		}
 	})
-}
-```
+}```
 
 This checked to see whose turn it was and then distributed a card to that player using the functions demonstrated above.
 
