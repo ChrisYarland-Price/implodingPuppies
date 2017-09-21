@@ -19,7 +19,7 @@ div{
 body{
 	background-color: #82a7b5;
 	height: 100%;
-	width: 100vw; 
+	width: 98vw; 
 	padding: 0;
 	color: white;
 }
@@ -262,7 +262,7 @@ header{
 	position: initial;
 }
 #discard{
-	padding: 2%;
+	padding: 6%;
 	margin: 5% 5%;
 	width: 90%;
 	height: 40%;

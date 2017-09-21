@@ -5,27 +5,25 @@
 // Copyright 2017 Chris Yarland-Price
 $(function(){
 
-	scoreboard();
+	run();
 
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// This is the function that starts the game. 
+	function run() {
+		var deck = [];
+		var playerHand = [];
+		var comHand = [];
+		hideInstruct();
+		gamePrep(deck, playerHand, comHand);
+		deckClick(playerHand,comHand, deck);
+	}
+	// This is the function to hide the instructions based on clicking the button in the box. 
+	function hideInstruct() {
+		$('#hideInstructions').click(function() {
+			$('#Instructions').hide();
+		});
+	}
+	// This is the function that prepares the game for play. This includes loading the deck and creating each players hand.
 	function gamePrep(deck, playerHand, comHand) {
 		var discard = [];
 		var cards = ['1','2','3','4','5']
@@ -34,30 +32,12 @@ $(function(){
 		}
 		console.log(deck)
 		dealHands(deck, playerHand, comHand);
-		playerHand.push('Kickball');
-		comHand.push('Kickball');
-		addCardToHand('#playHand', playerHand)
-		addCardToHand('#comHand', comHand)
-		dispPlayHand("#playHand .card", playerHand);
-		dispPlayHand('#comHand .card', comHand);
+
 		addTo(deck, 2, "Kickball");
 		addTo(deck, 2, "Skip");
 		addTo(deck, 1, "Imploding Puppy");
 	}
-
-	function addTo(destination, index, value) {
-		var array = [];
-		for (var i = 0; i < index; i++) {
-			destination.push(value);
-		}
-	}	
-	function dealCard(destination, origin) {
-		var randomNumber = Math.floor(Math.random() * origin.length);
-		var card = origin.splice(randomNumber, 1)[0];
-		addTo(destination, 1, card)
-
-		return card;
-	}
+	// This is the function that creates the players hands at first
 	function dealHands(deck, playerHand, comHand){
 		for (var i = 0; i < 5; i++) {
 			dealCard(playerHand, deck);
@@ -66,19 +46,31 @@ $(function(){
 			addCardToHand('#comHand', comHand)
 			
 		}
+		playerHand.push('Kickball');
+		comHand.push('Kickball');
+		addCardToHand('#playHand', playerHand)
+		addCardToHand('#comHand', comHand)
 	}
-	function dispPlayHand(dest, hand){
-		$(dest).each( function(index){
-			var num = hand[index];
-			$(this).addClass(hand[index]).html(hand[index]);
-		});	
+	// This is the function that deals the cards it does this by calculating a random number and then using that number as the index to pull a variable out of the array. 
+	function dealCard(destination, origin) {
+		var randomNumber = Math.floor(Math.random() * origin.length);
+		var card = origin.splice(randomNumber, 1)[0];
+		addTo(destination, 1, card)
+
+		return card;
 	}
-	function interval(div, score) {
-		setInterval(function(){
-			$(div).html(score);
-			// $('#cscore').html(cwins)
-		}, 100);
+	// This is the function that adds the cards to a specified place this can be adding the cards to the deck, or to the players hands
+	function addTo(destination, index, value) {
+		var array = [];
+		for (var i = 0; i < index; i++) {
+			destination.push(value);
+		}
 	}
+	// This is the function that creates and displays the cards
+	function addCardToHand(dest, hand) {
+		$(dest).delay(10000).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
+	}
+	// This is the function creates the listner for the deck click as well as calling the function that allows the player to click on the cards. 
 	function deckClick(playerHand,comHand, deck){
 		var pwins = 0;
 		var cwins = 0;
@@ -86,28 +78,45 @@ $(function(){
 		var oldp = pwins;
 		var oldc = cwins;
 		playCards(comHand, deck, score[0], cwins, playerHand, score);
-		// interval('#cscore', score[1])
 		setInterval(function(){
 			$('#pscore').html(score[0]);
 			$('#cscore').html(score[1])
 		}, 100);
 		$('#deck').click(function() {
 			cwins = dealer(playerHand, deck, score[1], '#playHand', '#playHand .Kickball', comHand)
-			debugger
 			score = comdeal(comHand, deck, score[0], cwins, playerHand, score);
 
 			playCards(comHand, deck, score[0], cwins, playerHand, score);
 
 		});
-
 	}
+	// This is the function that sets up the listener for the players hand cards allowing them to be played. 
+	function playCards(comHand, deck, pwins, cwins, playerHand, score){
+		$('#playHand .card').click(function () {
+			moveToDiscard(this, playerHand);
+			if ($(this).html() === "Skip") {
+				comdeal(comHand, deck, score[0], cwins, playerHand, score)
+			}
+		})
+	}
+	// This is the function that moves an item to the discard pile.
+	function moveToDiscard(move, hand) {
+		setTimeout(function(){
+			$(move).slideUp("slow", function() {
+				$(move).delay(500).remove()
+			})
+			setTimeout(function(){
+				$('#discard').append(move)
+				$(move).delay(500).slideDown("slow");
+			},700);
+		},100);
+		hand.splice(hand.indexOf($(move).html()), 1);
+	}
+	// This is the function that deals the card to the computer it also checks to see if the score has changed and if it has it will set off the restart function.
 	function comdeal(comHand, deck, playwins, cwins, playerHand, score) {
-		// interval('#pscore', score[0])
-		debugger
 		setTimeout(function() {
 			playwins = dealer(comHand, deck, playwins, '#comHand', '#comHand .Kickball', playerHand)
 			if (playwins !== score[0] || cwins !== score[1]) {
-				debugger
 				score[0] = playwins;
 				score[1] = cwins;
 				restart(deck, playerHand, comHand);
@@ -115,17 +124,18 @@ $(function(){
 		}, 400);	
 		return score;
 	}
+	// This is the function that deals the cards and adds it to a players hand 
 	function dealer(hand, deck, win, disphand, place, other) {
 		dealCard(hand, deck);
 		addCardToHand(disphand, hand);
-		win = playerComp(hand[hand.length - 1], hand, deck, win, place, other);
+		win = winComp(hand[hand.length - 1], hand, deck, win, place, other);
 
 		return win;
 	}
-	function addCardToHand(dest, hand) {
-		$(dest).delay(10000).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
-	}
-	function playerComp(draw, hand, deck, wins, place, other){
+	// This is the function that compares the drawn card to the imploding puppy it figures out if you have a kickball 
+	// and it asks if you want to use it for the comp it will always use it. If they do not it will play a message 
+	// it returns the score +1 if the player has lost and is called with the opposing players score. or it just returns the score.
+	function winComp(draw, hand, deck, wins, place, other){
 		var win = wins; 
 		if (draw === "Imploding Puppy") {
 
@@ -146,9 +156,9 @@ $(function(){
 			}			
 		}else{
 			return win;
-		}
-			
+		}	
 	}	
+	// This is the function that removes the kickball from the players hand and moves it to the discard
 	function kickball(hand, deck, place){
 		setTimeout(function() {$(".Imploding").delay(1000).remove();}, 2000);
 		hand.splice(hand.indexOf('Imploding Puppy'), 1);
@@ -158,14 +168,13 @@ $(function(){
 			message('The Computer Used a Kickball')	
 		}
 	}
-	function playCards(comHand, deck, pwins, cwins, playerHand, score){
-		$('#playHand .card').click(function () {
-			moveToDiscard(this, playerHand);
-			if ($(this).html() === "Skip") {
-				comdeal(comHand, deck, score[0], cwins, playerHand, score)
-			}
-		})
+	// This is the function that displays messages
+	function message(content){
+
+		$('#messages').html(content);
+
 	}
+	// This is the function that restarts the game
 	function restart(deck, playerHand, comHand){
 		setTimeout(function function_name(argument) {
 			if (confirm("would you like to replay") === true){
@@ -179,35 +188,5 @@ $(function(){
 
 			}
 		}, 800) 
-	}
-	function moveToDiscard(move, hand) {
-		setTimeout(function(){
-			$(move).slideUp("slow", function() {
-				$(move).delay(500).remove()
-			})
-			setTimeout(function(){
-				$('#discard').append(move)
-				$(move).delay(500).slideDown("slow");
-			},700);
-		},100);
-		hand.splice(hand.indexOf($(move).html()), 1);
-	}
-	function scoreboard() {
-		var deck = [];
-		var playerHand = [];
-		var comHand = [];
-		hideInstruct();
-		gamePrep(deck, playerHand, comHand);
-		deckClick(playerHand,comHand, deck);
-	}
-	function message(content){
-
-		$('#messages').html(content);
-
-	}
-	function hideInstruct() {
-		$('#hideInstructions').click(function() {
-			$('#Instructions').hide();
-		});
-	}
+	}	
 });
