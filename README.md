@@ -47,27 +47,26 @@ The deck was created, in javascript, as an array, and a function was created in 
 The next and final step in the preperations was to create the players hands and show them on screen. 
 This was done using the following code. 
 
-``` 
+```javascript 
 function dealCard(destination, origin) {		
- 	var randomNumber = Math.floor(Math.random() * deck.length);
- 	var card = origin.splice(randomNumber, 1)[0];
- 	addTo(destination, 1, card)
- 
- 	return card;
- 	}
- 	function dealHands(deck, playerHand, comHand){
- 		for (var i = 0; i < 5; i++) {
- 			dealCard(playerHand, deck);
- 			dealCard(comHand, deck);
- 		}
- 	}
- 	function dispPlayHand(dest, hand){
- 		$(dest).each( function(index){
- 			var num = hand[index];
- 			$(this).addClass(hand[index]).html(hand[index]);
- 		});	
- 	}
- 	```
+var randomNumber = Math.floor(Math.random() * deck.length);
+var card = origin.splice(randomNumber, 1)[0];
+addTo(destination, 1, card)
+return card;
+}
+function dealHands(deck, playerHand, comHand){
+for (var i = 0; i < 5; i++) {
+dealCard(playerHand, deck);
+dealCard(comHand, deck);
+}
+}
+function dispPlayHand(dest, hand){
+$(dest).each( function(index){
+var num = hand[index];
+$(this).addClass(hand[index]).html(hand[index]);
+});	
+}
+```
 
 The second function is used to deal 5 cards to the player this is done by calling the dealCard function. 
 The dealCard creates a randon number that is used to pull a variable  from the deck.
@@ -80,27 +79,28 @@ This was the base of the game from hereon, the talk shall mostly be on the imple
 ### Creation of the Gameplay
 From this point on the gameplay was implemented, at the end of the players turn they have to draw a card so the following code was created so that when they clicked on the deck there would be a process that took place. 
 
-``` function deckClick(turn){
-	$('#deck').click(function(argument) {
-		if (turn == 'player'){
-			dealCard(playerHand, deck)
-			addCardToHand('#playHand', playerHand)
-			turn = 'com'
-		}else{
-			dealCard(comHand, deck)
-			addCardToHand('#comHand', comHand)
-			turn = 'player'
-		}
-	})
+```javascript
+function deckClick(turn){
+$('#deck').click(function(argument) {
+if (turn == 'player'){
+dealCard(playerHand, deck)
+addCardToHand('#playHand', playerHand)
+turn = 'com'
+}else{
+dealCard(comHand, deck)
+addCardToHand('#comHand', comHand)
+turn = 'player'
+}
+})
 } ```
 
 This checked to see whose turn it was and then distributed a card to that player using the functions demonstrated above.
 
-``` 
+```javascript
 function addCardToHand(dest, hand) {
-		$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
-	}
- ```
+$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
+}
+```
 addCardToHand was a simple creation function that created a new card onscreen using the values it is given.
 ---
 
