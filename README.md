@@ -12,19 +12,19 @@ The choice of game was personal, Imploding puppies was born thanks to the creato
 This game was created using HTML5, CSS, Javascript and Jquery. 
 It can be run on any machine capable of displaying a webpage. 
 
-________
+___
 
 ## Setup 
 ### Setup
 To set this masterful creation up on a machine of your choice you can create a git clone or download a zip file of the repository. Once you have the files you can navigate to the page in your browser using the Index.html file that is in the imploding puppies folder.
 
-___________________
+___
 
 
 ### Planning
 The very first step in this process was to take my idea of a game and create a wireframe of what i expected to need to do as well as creating some milestones to give me an impression of the things that needed to be done. 
 
-___________________
+___
 
 ## Creation
 ### Layout 
@@ -48,23 +48,23 @@ The next and final step in the preperations was to create the players hands and 
 This was done using the following code. 
 
 ```javascript 
-function dealCard(destination, origin) {		
-var randomNumber = Math.floor(Math.random() * deck.length);
-var card = origin.splice(randomNumber, 1)[0];
-addTo(destination, 1, card)
-return card;
+function dealCard(destination, origin) {        
+    var randomNumber = Math.floor(Math.random() * deck.length);
+    var card = origin.splice(randomNumber, 1)[0];
+    addTo(destination, 1, card)
+    return card;
 }
 function dealHands(deck, playerHand, comHand){
-for (var i = 0; i < 5; i++) {
-dealCard(playerHand, deck);
-dealCard(comHand, deck);
-}
+    for (var i = 0; i < 5; i++) {
+        dealCard(playerHand, deck);
+        dealCard(comHand, deck);
+   }
 }
 function dispPlayHand(dest, hand){
-$(dest).each( function(index){
-var num = hand[index];
-$(this).addClass(hand[index]).html(hand[index]);
-});	
+    $(dest).each( function(index){
+        var num = hand[index];
+        $(this).addClass(hand[index]).html(hand[index]);
+        });	
 }
 ```
 
@@ -81,30 +81,115 @@ From this point on the gameplay was implemented, at the end of the players turn 
 
 ```javascript
 function deckClick(turn){
-$('#deck').click(function(argument) {
-if (turn == 'player'){
-dealCard(playerHand, deck)
-addCardToHand('#playHand', playerHand)
-turn = 'com'
-}else{
-dealCard(comHand, deck)
-addCardToHand('#comHand', comHand)
-turn = 'player'
-}
-})
+    $('#deck').click(function(argument) {
+        if (turn == 'player'){
+            dealCard(playerHand, deck)
+            addCardToHand('#playHand', playerHand)
+            turn = 'com'
+            }else{
+            dealCard(comHand, deck)
+            addCardToHand('#comHand', comHand)
+            turn = 'player'
+        }
+    })
 } ```
 
 This checked to see whose turn it was and then distributed a card to that player using the functions demonstrated above.
 
 ```javascript
 function addCardToHand(dest, hand) {
-$(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
+   $(dest).append($('<div></div>').addClass('card '+ hand[hand.length - 1]).html(hand[hand.length -1]))
 }
 ```
+
 addCardToHand was a simple creation function that created a new card onscreen using the values it is given.
----
+
+
+___
 
 This iteration was quickly improved by the addition of a way for cards to be moved to the discard pile. A number of CSS improvements were made as well. After prodigious testing it was determined that the next phase could be implemented.
----
+
+This phase was the first time that the game could actually be played through. The playerComp and compComp functions compare the drawn cards to the 'Imploding puppy' value. If that card is drawn it checks to see whether the player has a kickball if they do they get the chance to use it if not then that player loses.
+
+
+```
+function playerComp(draw){
+    if (draw === "Imploding Puppy") {
+        if (playerHand.indexOf("Kickball") !== -1){
+            if(confirm("You have a Kickball do you want to use it?") === true){
+                $(".Imploding").remove();
+                playerHand.splice(playerHand.indexOf('Imploding Puppy'), 1);
+                $("#playHand .Kickball").eq(0).remove();
+                playerHand.splice(playerHand.indexOf('Kickball'), 1)
+                addTo(deck, 1, "Imploding Puppy");
+            }    
+        }else{
+            alert("Player Loses");
+        }
+    }
+}
+```
+
+The next iteration moved all of the preperation to a run function. It also removed the changing of the turn based on the deck being clicked, this means that the user does not have to force the draw of the computer. It should work automatically. 
+
+The moveToDiscard function was also improved to be able to display the discarded card in the discard pile. this was integrated into the function when the kickball is used. 
+
+## Improvements
+Thus commenced the improvements section. This was all done to try and improve both the implementation of the game and the gameplay itself. 
+
+### Implementation
+
+I realised that the main variables that were being used, were infact global variables due to an oversight on my part. This was corrected and those variables were moved to be inside of the run function. 
+
+This caused a cascading failure of the rest of the game as variables that were once easily accessable had to now be passed through to the functions that are needed. 
+
+I started to add delays to certain functions that were needed to create the illusion that the computer you are playing against acts human rather than just blazing through the code as it normally does. 
+
+This meant I also added the graphics and animations so that the cards look like they are moved rather than them just dissapearing and reapparing in the discard pile. 
+
+The final implementation improvement was to justify the CSS and create a mobile site. 
+
+
+### Improvements
+
+The next improvement implemented was the creation of a reset function, this was partly done to try and create a scoreboard that would be self updating and see how the player is doing. 
+
+This involved creating a scoreboard function and a restart function. These are detailed below.
+
+```
+function restart(deck, playerHand, comHand){
+    if (confirm("would you like to replay") === true){
+    	$('.card').remove();
+    	deck.splice(0);
+    	playerHand.splice(0);
+    	comHand.splice(0);
+        gamePrep(deck, playerHand, comHand);
+    }else{
+        alert("You have quit the game")
+    }
+}
+
+function scoreboard() {
+    var deck = [];
+    var playerHand = [];
+    var comHand = [];
+    deckClick(playerHand,comHand, deck);
+    playCards(playerHand);
+    gamePrep(deck, playerHand, comHand);
+}
+```
+
+The restart function removes all of the cards currently on screen, it removes all of the variables from the players hands arrays and then calls the gamePrep function which is the renamed run function from before. 
+This also meant that i had to return certain values from the functions specifically if the game was over and who had won. In the end i used an array to simplify this as trying to return two variables was otherwise incredibly difficult.  
+
+___
+
+I then added a message div and a message function that displays messages, this was to aleviate the use of the alert function in javascript. 
+
+This was done by simply using jQuery to append the message to the messages div. 
+
+
+___
+
 
 
