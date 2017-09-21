@@ -1,3 +1,5 @@
+<!-- Copyright 2017 Chris Yarland-Price -->
+
 # implodingPuppies
 Imploding puppies is an attempt to create a game like exploding kittens online
 
@@ -17,6 +19,19 @@ ___
 ## Setup 
 ### Setup
 To set this masterful creation up on a machine of your choice you can create a git clone or download a zip file of the repository. Once you have the files you can navigate to the page in your browser using the Index.html file that is in the imploding puppies folder.
+
+
+### Improving
+The file layout is simple. Inside the main folder are 3 more, 
+* Assets, for the images.
+* CSS, for the CSS.
+* JS, for the Javascript.
+
+To change the functionality you will need to modify the javascript file. 
+
+To change the look, you can modify the CSS file. 
+
+To change the contents you can modify index.html which is in the main directory. 
 
 ___
 
@@ -191,5 +206,33 @@ This was done by simply using jQuery to append the message to the messages div.
 
 ___
 
+## Issues. 
+
+Currently any issues are logged using teh github issue system. If you find a bug and would like to report it please use that functionality. There is currently one open issue, based on the skip card being used to win the game and it reseting twice. 
+
+This issue shall be resolved posthaste. 
+
+___
+
+## Demo
+
+Please find a link to the site.
 
 
+___
+
+## License
+
+This file is part of Imploding Puppies.
+Imploding Puppies is free software: you can redistribute it and/or modifyit under the terms of the GNU General Public License as published bythe Free Software Foundation, either version 3 of the License, or(at your option) any later version.
+Imploding Puppies is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theGNU General Public License for more details.
+You should have received a copy of the GNU General Public Licensealong with Imploding Puppies.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+
+
+
+
+
+Copyright 2017 Chris Yarland-Price
