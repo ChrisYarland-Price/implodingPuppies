@@ -32,7 +32,6 @@ $(function(){
 		}
 		console.log(deck)
 		dealHands(deck, playerHand, comHand);
-
 		addTo(deck, 2, "Kickball");
 		addTo(deck, 2, "Skip");
 		addTo(deck, 1, "Imploding Puppy");
@@ -92,12 +91,14 @@ $(function(){
 	}
 	// This is the function that sets up the listener for the players hand cards allowing them to be played. 
 	function playCards(comHand, deck, pwins, cwins, playerHand, score){
+		$('#playHand .card').off('click');
 		$('#playHand .card').click(function () {
 			moveToDiscard(this, playerHand);
 			if ($(this).html() === "Skip") {
-				comdeal(comHand, deck, score[0], cwins, playerHand, score)
+				score = comdeal(comHand, deck, score[0], cwins, playerHand, score)
 			}
-		})
+		});
+		return score
 	}
 	// This is the function that moves an item to the discard pile.
 	function moveToDiscard(move, hand) {

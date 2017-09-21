@@ -169,7 +169,7 @@ The final implementation improvement was to justify the CSS and create a mobile 
 
 The next improvement implemented was the creation of a reset function, this was partly done to try and create a scoreboard that would be self updating and see how the player is doing. 
 
-This involved creating a scoreboard function and a restart function. These are detailed below.
+This involved creating a scoreboard interval and a restart function. These are detailed below.
 
 ```
 function restart(deck, playerHand, comHand){
@@ -183,15 +183,10 @@ function restart(deck, playerHand, comHand){
         alert("You have quit the game")
     }
 }
-
-function scoreboard() {
-    var deck = [];
-    var playerHand = [];
-    var comHand = [];
-    deckClick(playerHand,comHand, deck);
-    playCards(playerHand);
-    gamePrep(deck, playerHand, comHand);
-}
+setInterval(function(){
+    $('#pscore').html(score[0]);
+    $('#cscore').html(score[1])
+}, 100);
 ```
 
 The restart function removes all of the cards currently on screen, it removes all of the variables from the players hands arrays and then calls the gamePrep function which is the renamed run function from before. 
@@ -203,12 +198,11 @@ I then added a message div and a message function that displays messages, this w
 
 This was done by simply using jQuery to append the message to the messages div. 
 
-
 ___
 
 ## Issues. 
 
-Currently any issues are logged using teh github issue system. If you find a bug and would like to report it please use that functionality. There is currently one open issue, based on the skip card being used to win the game and it reseting twice. 
+Currently any issues are logged using the github issue system. If you find a bug and would like to report it please use that functionality. There is currently one open issue, based on the skip card being used to win the game and it reseting twice and the score not updating. 
 
 This issue shall be resolved posthaste. 
 
@@ -218,7 +212,7 @@ ___
 
 Please find a link to the site.
 
-
+<https://chrisyarland-price.github.io/implodingPuppies/>
 ___
 
 ## License
