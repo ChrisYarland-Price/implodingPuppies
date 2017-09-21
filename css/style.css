@@ -19,12 +19,12 @@ div{
 body{
 	background-color: #82a7b5;
 	height: 100%;
-	width: 98vw; 
+	width: 93vw; 
 	padding: 0;
 	color: white;
 }
 table{
-	width: 100%;
+	width: 98%;
 	height: 1%;
 	list-style: none;
 	text-align: center;
@@ -83,12 +83,11 @@ header{
 	width: 7%;
 }
 #deck{
-/*	margin: 3% 5%;
-*/	position: fixed;
+	position: fixed;
 	top: 70%;
-	left: 70%;
-	width: 150px;
-	height: 175px;
+	left: 60%;
+	width: 100px;
+	height: 145px;
 	background-color: #ff9b42;
 	background-image: url("../assets/deck.jpg");
 	background-size: 100% 100%;
@@ -108,7 +107,7 @@ header{
 
 }
 .card{
-	width: 10%;
+	width: 20%;
 	height: 20%;
 	float: left;
 	border: 1px solid white;
@@ -274,7 +273,7 @@ header{
 .card{
 	width: 75px;
 	height: 100px;
-	margin: 1px;
+	margin: 3px;
 }
 .deck{
 	display: block;
