@@ -162,16 +162,18 @@ $(function(){
 		})
 	}
 	function restart(deck, playerHand, comHand){
-		if (confirm("would you like to replay") === true){
-			$('.card').remove();
-			deck.splice(0);
-			playerHand.splice(0);
-			comHand.splice(0);
-			gamePrep(deck, playerHand, comHand);
-		}else{
-			message("You have quit the game")
+		setTimeout(function function_name(argument) {
+			if (confirm("would you like to replay") === true){
+				$('.card').remove();
+				deck.splice(0);
+				playerHand.splice(0);
+				comHand.splice(0);
+				gamePrep(deck, playerHand, comHand);
+			}else{
+				message("You have quit the game")
 
-		}
+			}
+		}, 800) 
 	}
 	function moveToDiscard(move, hand) {
 		setTimeout(function(){
