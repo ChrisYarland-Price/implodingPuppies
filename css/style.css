@@ -184,7 +184,8 @@ header{
 	margin-top: 10px;
 	text-align: center;
 	background-color: #ddeeff;
-	border: #458acc;	
+	border: #458acc;
+	padding: 20px;	
 }
 .mobile{
 	margin: auto;
@@ -216,7 +217,7 @@ header{
 	width: 73%;
 	height:	100%;
 	display: inline-block;
-	margin:1% 0% 1% 15.7%;
+	margin:1% 0% 1% 16.4%;
 }
 #comHand{
 	width: 49%;
