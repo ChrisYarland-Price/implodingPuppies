@@ -45,7 +45,6 @@ header{
 	padding: .2%;
 }
 #Instructions{
-	position: fixed;
 	margin:  1% 5%;
 	width: 90%;
 	font-size: 25px;
@@ -277,6 +276,15 @@ header{
 }
 .deck{
 	display: block;
+}
+#Instructions{
+	position: fixed;
+	margin:  1% 5%;
+	width: 90%;
+	font-size: 25px;
+	padding: 5%;
+	background-color: #05B2DC;
+	border: 2px solid #05B2DC;
 }
 
 
