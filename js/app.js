@@ -30,7 +30,6 @@ $(function(){
 		for (var i = 0; i < cards.length; i++) {
 			addTo(deck, 5, cards[i]);
 		}
-		console.log(deck)
 		dealHands(deck, playerHand, comHand);
 		addTo(deck, 2, "Kickball");
 		addTo(deck, 2, "Skip");
