@@ -46,7 +46,6 @@ header{
 }
 #Instructions{
 	position: fixed;
-	display: none;
 	margin:  1% 5%;
 	width: 90%;
 	font-size: 25px;
